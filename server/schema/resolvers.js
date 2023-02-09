@@ -32,8 +32,8 @@ const resolvers = {
             const token = signToken(user);
             return {token, user};
         },
-        login: async (parent, {password}) => {
-            const user = await User.findOne({password});
+        login: async (parent, {email, password}) => {
+            const user = await User.findOne({email});
 
             if (!user) {
                 throw new AuthenticationError("No user found");
@@ -46,6 +46,41 @@ const resolvers = {
             const token = signToken(user);
 
             return (token, user);
+        },
+
+        saveBook: async (parent, {bookID}, context) => {
+            if (context.user) {
+                const book = await Book.create({
+                   author,
+                   description,
+                   title,
+                   bookID,
+                   image,
+                   link 
+                });
+
+                await User.findOneAndUpdate(
+                    {_id: context.user._id},
+                    { $addToSet: {Books: book._id}}
+                );
+
+                return User;
+            }
+        },
+
+        deleteBook: async (parent, {Book}, context) => {
+            if(context.user) {
+                const Book = await Book.findOneAndDelete({
+                    _id:Book,
+                });
+                
+                await User.findOneAndDelete(
+                    {_id: context.user._id},
+                    {pull: {workouts: workout._id}}
+                );
+
+                return Book;
+            }
         },
     },
 };
