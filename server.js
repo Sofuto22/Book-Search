@@ -1,8 +1,8 @@
 const express = require('express');
 const path = require('path');
-const db = require('./server/config/connection');
-const routes = require('./server/routes');
-const { authMiddleware } = require("./server/utils/auth");
+const db = require('./Book-Finder/server/config/connection');
+const routes = require('./Book-Finder/server/routes');
+const { authMiddleware } = require("./Book-Finder/server/utils/auth");
 const { ApolloServer } = require("apollo-server-express");
 
 const app = express();
